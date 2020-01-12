@@ -48,21 +48,27 @@ router.get('/', async ctx => {
   } = buddy[0];
 
   let sortByDamage = players.sort((a, b) => b.hero_damage - a.hero_damage);
-  console.log(sortByDamage[0].hero_damage);
-  console.log(sortByDamage[9].hero_damage);
   let damageDescMap = sortByDamage.map(a => a.hero_damage);
-  let damageRank = damageDescMap.indexOf(hero_damage);
-  console.log(damageRank);
+  let damageRank = parseInt(damageDescMap.indexOf(hero_damage)) + 1;
+  console.log('damage rank ' + damageRank);
 
 
   let hero = heroList.filter(hero => hero.id === hero_id);
   let kda = (kills + assists) / deaths;
-  let carry = win === 0 ? 'just fed' : kda > 2 ? 'played well' : 'got carried';
+  let carry = win === 0 ? 'just fed' : kda > 2 && damageRank < 3 ? 'played well' : 'got carried';
   let winWord = win === 1 ? 'won' : 'lost';
   let damageWord = `, the ${convertToText(damageRank)} highest in the game.`
+
+  let kdaComments = kda > 2 ? 'seems good' : 'is quite poor';
+  let damageComments = damageRank > 2 ? 'His hero damage is quite low.' : ''
+
   console.log(hero[0].localized_name);
-  const reply = `Juzer ${winWord} as ${hero[0].localized_name} with a KDA of ` +
-  `${kills} ${deaths} ${assists}. He has a hero damage of ${hero_damage}${damageWord}` +
+  const reply = `Juzer ${winWord} as ${hero[0].localized_name}` +
+  ` with a KDA of ${kills} ${deaths} ${assists}.` +
+  ` He has a hero damage of ${hero_damage}` +
+  ` the ${convertToText(damageRank)} highest in the game.` +
+  ` ${damageComments}` +
+  ` His kda ${kdaComments}.` +
   ` Looks like he ${carry}`;
   ctx.send(200, reply);
 });
@@ -72,7 +78,7 @@ function convertToText(num) {
   let param;
   switch (num) {
     case 1:
-      param = '1st';
+      param = '';
       break;
     case 2:
       param = '2nd';
