@@ -64,11 +64,11 @@ router.get('/', async ctx => {
 
   console.log(hero[0].localized_name);
   const reply = `Juzer ${winWord} as ${hero[0].localized_name}` +
-  ` with a KDA of ${kills} ${deaths} ${assists}.` +
+  ` with a K D A of ${kills} ${deaths} ${assists}.` +
   ` He has a hero damage of ${hero_damage}` +
   ` the ${convertToText(damageRank)} highest in the game.` +
   ` ${damageComments}` +
-  ` His kda ${kdaComments}.` +
+  ` His K D A ${kdaComments}.` +
   ` Looks like he ${carry}`;
   ctx.send(200, reply);
 });
